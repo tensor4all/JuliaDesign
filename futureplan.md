@@ -41,7 +41,7 @@ But, a citation is not a big problem.
 
 - Pros
   - No dependency on `ITensors.jl`. 
-  - If we use the same indexing structure as `ITensors.jl`, we can convert our tensor network object to an ITensor object and vice versa easily.
+  - If we reimplement the same indexing structure as `ITensors.jl`, we can convert our tensor network object to an ITensor object and vice versa easily.
   - Still less code to maintain.
 
 - Cons

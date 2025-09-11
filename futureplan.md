@@ -41,7 +41,8 @@ But, a citation is not a big problem.
 
 - Pros
   - No dependency on `ITensors.jl`. 
-  - Less code to maintain.
+  - If we use the same indexing structure as `ITensors.jl`, we can convert our tensor network object to an ITensor object and vice versa easily.
+  - Still less code to maintain.
 
 - Cons
   - The user may be still encouraged to cite the ITensor paper as `NDTensors.jl` is maintained by the `ITensors.jl` team.
@@ -55,6 +56,5 @@ But, a citation is not a big problem.
   - We are not sure that the hybrid indexing structure is better than the ITensor's indexing structure.
 
 ### Conclusion
-At this moment, I would prefer Option 1.
+At this moment, I would prefer Option 1 or 2.
 If we become confident about the hybrid indexing structure, we can switch to Option 3.
-Option 2 feels incomplete.

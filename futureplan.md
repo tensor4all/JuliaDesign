@@ -13,8 +13,8 @@ The following are the purposes of future developments:
 
 ## Possible options
 
-1. Implement our own tensor network structure, and use `ITensors.ITensor` as an internal data structure.
-2. Implement our own indexing structure, `ITensor`-like structure, and tensor network structure using only `NDTensors.jl`.
+1. Implement our own tensor network structure, and use `ITensors.ITensor` as an internal data structure. But, we do not use `ITensorMPS.jl` as an internal data structure.
+2. Implement our own indexing structure compatible with `ITensors.jl`.
 3. Switch to hybrid indexing structure
 
 From top to bottom, the options are less ITensor-dependent.
@@ -22,17 +22,9 @@ From top to bottom, the options are less ITensor-dependent.
 ## On `ITensors.jl`
 `ITensors.jl` is not a big library.
 The dependencies of `ITensors.jl` are not big since most functionalities have been separated from `ITensors.jl`.
-I do not think there will be frequent future major changes.
+If we have a strong dependency on `ITensors.jl`, we can encourage the user to cite the ITensor paper.
 
-The library contains `TagSets` (tag sets), `ITensor` (general tensor type) and some other utilities such as `SmallStrings` (fixed length strings) for tags.
-`TagSets` and `SmallStrings` have been effectively separated from the main source code and are available [here](https://github.com/ITensor/ITensors.jl/tree/main/src/lib).
-We can copy them for our own library, or reimplement them if necessary.
-Alternatively, we can simply dependent on `ITensors.jl`.
-
-The dependence of `ITensors.jl` means that the user of our library needs to cite the ITensor paper as well.
-Fine, it is not a big problem. Get more citations in my community :)
-
-## Drawbacks of depending on a big external library
+## General drawbacks of depending on a big external library
 From my experience with ALPS and TRIQS, the following are the drawbacks of depending on a big external library:
 
 - Sometimes, the external library is updated frequently, and our library needs to be updated frequently following their updates.
@@ -46,7 +38,7 @@ I have never failed to install `ITensors.jl` with the package manager.
 We do not some of the default beavior of `ITensorMPS.jl`, but we do not depend on it.
 
 
-## Considerations
+## Pros and Cons of each option
 
 ### Option 1
 
@@ -102,6 +94,6 @@ The practical usage of hybrid indexing structure is not clear yet.
 We should first implement the hybrid indexing structure as a separate package, and do many experiments with it.
 
 ## My recommendation
-I would recommend Option 1, using `ITensors.jl` as a strong dependency.
+I would recommend Option 1, using `ITensors.jl` as a strong dependency if necessary.
 If a strong dependency on `ITensors.jl` is necessary for some small libraries such as `TCI.jl`, we are fine with a weak dependency.
 For something like `Quantics.jl` and `TCIAlgorithms.jl`, strong dependency is necessary and makes our development easier.

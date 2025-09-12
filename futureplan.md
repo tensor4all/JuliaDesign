@@ -68,6 +68,7 @@ We do not some of the default beavior of `ITensorMPS.jl`, but we do not depend o
 
 - Cons
   - The user may be still encouraged to cite the ITensor paper as `NDTensors.jl` is maintained by the `ITensors.jl` team.
+  - Implementing the comptible code for `ITensor.ITensor` and `ITensors.Index` is not trivial. Since we are familiar with the code of `ITensors.jl`, clean implementation is possible, and thus we cannot avoid licensing issues.
 
 ### Option 3
 - Pros
@@ -78,18 +79,16 @@ We do not some of the default beavior of `ITensorMPS.jl`, but we do not depend o
   - We are not sure that the hybrid indexing structure is better than the ITensor's indexing structure.
 
 ### My considerations
-Anyway, we need some default dynamic Tensor types for our T4A libraries.
-It is very combursome to use the current static TensorTrain types for our T4A libraries, especially in their interfaces.
-At this moment, I would prefer Option 1 or 2.
-If we become confident about the hybrid indexing structure, we can switch to Option 3.
+At this moment, I would prefer Option 1 or 2 since we need ITensor-like indexing structure for smooth transition from `ITensorMPS.jl`.
+Option 2 looks a reasonable option, but not trivial due to the licensing issues.
 
-I am quite satisfied with the current design of `ITensor`.
-A possible disadvantage is that the design may be difficult to integrate into C++ and Fortran codes.
-At some point, we may replace the backend (i.e., contraction algorithms) by optimized implementations written in Rust.
+We are not sure that the hybrid indexing structure is better than the ITensor's indexing structure.
+If we are confident about the hybrid indexing structure, we can switch to Option 3.
+If we take Option 2 first, we will have three different indexing structures in our libraries, which is too confusing.
 
 A reasonable option is start with Option 1, which requires a minimum maintenance effort.
 This means we make `ITensors.jl` a strong dependency for our libraries.
+Some people may think that T4A is a part of ITensor's development, but I do not think so.
+Depending on `numpy` is a common practice in the Python community.
 
-Alternatively, we implement a minimum set of functionalities in `ITensors.jl` as Option 2.
-This requires some maintenance and coding effort, but we can avoid the dependency on `ITensors.jl`.
-Coding effort is not a big problem with the help of LLMs.
+If anyone is not happy with the design of `ITensors.Index` or `ITensor.ITensor`, we should not take Option 1.

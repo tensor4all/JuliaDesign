@@ -24,6 +24,7 @@ The dependencies of `ITensors.jl` are not big since most functionalities have be
 The dependence of `ITensors.jl` means that the user of our library needs to cite the ITensor paper as well.
 But, a citation is not a big problem.
 
+
 ## Considerations
 
 ### Option 1
@@ -55,6 +56,16 @@ But, a citation is not a big problem.
 - Cons
   - We are not sure that the hybrid indexing structure is better than the ITensor's indexing structure.
 
-### Conclusion
+### My considerations
 At this moment, I would prefer Option 1 or 2.
 If we become confident about the hybrid indexing structure, we can switch to Option 3.
+
+`ITensors.jl` is not a big library, and I do not think there will be frequent future major changes.
+The library contains `TagSets` (tag sets), `ITensor` (general tensor type) and some other utilities such as `SmallStrings` (fixed length strings) for tags.
+`TagSets` and `SmallStrings` have been effectively separated from the main source code and are available [here](https://github.com/ITensor/ITensors.jl/tree/main/src/lib).
+We can copy them for our own library, or reimplement them if necessary.
+Alternatively, we can simply dependent on `ITensors.jl`.
+
+I am quite satisfied with the current design of `ITensor`, which is very dynamic.
+A possible disadvantage is that the design is too dynamic, and may be difficult to integrate into C++ and Fortran codes.
+At some point, we may replace the backend (i.e., contraction algorithms) by optimized implementations written in Rust.

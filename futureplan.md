@@ -68,7 +68,7 @@ We do not some of the default beavior of `ITensorMPS.jl`, but we do not depend o
 
 - Cons
   - The user may be still encouraged to cite the ITensor paper as `NDTensors.jl` is maintained by the `ITensors.jl` team.
-  - Implementing the comptible code for `ITensor.ITensor` and `ITensors.Index` is not trivial. Since we are familiar with the code of `ITensors.jl`, clean implementation is possible, and thus we cannot avoid licensing issues.
+  - Implementing the comptible code for `ITensor.ITensor` and `ITensors.Index` is not trivial. Since we are familiar with the code of `ITensors.jl`, clean implementation is not easy.
 
 ### Option 3
 - Pros

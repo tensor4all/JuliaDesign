@@ -68,27 +68,40 @@ We do not some of the default beavior of `ITensorMPS.jl`, but we do not depend o
 
 - Cons
   - The user may be still encouraged to cite the ITensor paper as `NDTensors.jl` is maintained by the `ITensors.jl` team.
-  - Implementing the comptible code for `ITensor.ITensor` and `ITensors.Index` is not trivial. Since we are familiar with the code of `ITensors.jl`, clean implementation is not easy.
+  - Implementing the comptible code for `ITensor.ITensor` and `ITensors.Index` is not trivial. Since we are familiar with the code of `ITensors.jl`, clean implementation is not easy (licensing issues).
+  - People may think that we are copying ITensor's design without acknowledgement.
 
 ### Option 3
 - Pros
   - Full control
   - Compatible with the Rust ecosystem.
+  - True independence.
 
 - Cons
   - We are not sure that the hybrid indexing structure is better than the ITensor's indexing structure.
 
-### My considerations
-At this moment, I would prefer Option 1 or 2 since we need ITensor-like indexing structure for smooth transition from `ITensorMPS.jl`.
-Option 2 looks a reasonable option, but not trivial due to the licensing issues.
+## Why I think Option 2 is not a good option
+While Option 2 might seem appealing at first glance to avoid dependency on `ITensors.jl`, it actually creates more problems than it solves:
 
-We are not sure that the hybrid indexing structure is better than the ITensor's indexing structure.
-If we are confident about the hybrid indexing structure, we can switch to Option 3.
-If we take Option 2 first, we will have three different indexing structures in our libraries, which is too confusing.
+**The fundamental contradiction**: The main motivation for avoiding `ITensors.jl` dependency is often to maintain independence and avoid being seen as "just another ITensor-based library." However, Option 2 requires reimplementing `ITensors.Index` and `ITensor.ITensor` with the same design and functionality. This essentially means we're still following ITensor's design philosophy, just without the official dependency and acknowledgement. We would likely be criticized for "copying ITensor's design" rather than being praised for independence.
 
-A reasonable option is start with Option 1, which requires a minimum maintenance effort.
-This means we make `ITensors.jl` a strong dependency for our libraries.
-Some people may think that T4A is a part of ITensor's development, but I do not think so.
-Depending on `numpy` is a common practice in the Python community.
+**Implementation complexity without clear benefits**: Reimplementing `ITensors.Index` and `ITensor.ITensor` is non-trivial, especially since we want to maintain compatibility for easy conversion and to ensure performance. The licensing issues are also complex - we'd still need to cite the ITensor paper since `NDTensors.jl` is maintained by the same team. So we're taking on significant implementation burden without actually achieving true independence.
 
-If anyone is not happy with the design of `ITensors.Index` or `ITensor.ITensor`, we should not take Option 1.
+**Maintenance overhead**: We would end up maintaining our own versions of core data structures that already exist and are well-tested in `ITensors.jl`. This increases our maintenance burden without providing clear value to users.
+
+**Confusing ecosystem**: If we go with Option 2, we'd have three different indexing structures across our libraries, which would be confusing for users and developers.
+
+**Better alternatives exist**: Option 1 provides the same benefits (easy conversion, smooth transition) with much less implementation effort. Option 3 offers true independence if we're confident about the hybrid indexing approach, though this is still unproven.
+
+In summary, Option 2 gives us the worst of both worlds: the complexity of reimplementation without the benefits of true independence or the simplicity of using existing, well-tested code.
+
+## Why Option 3 is too early
+Option 3 is too early to consider.
+Anyway, we need ITensor-compatible indexing structure first.
+The practical usage of hybrid indexing structure is not clear yet.
+We should first implement the hybrid indexing structure as a separate package, and do many experiments with it.
+
+## My recommendation
+I would recommend Option 1, using `ITensors.jl` as a strong dependency.
+If a strong dependency on `ITensors.jl` is necessary for some small libraries such as `TCI.jl`, we are fine with a weak dependency.
+For something like `Quantics.jl` and `TCIAlgorithms.jl`, strong dependency is necessary and makes our development easier.

@@ -19,10 +19,31 @@ The following are the purposes of future developments:
 
 From top to bottom, the options are less ITensor-dependent.
 
-## Background knowledge
+## On `ITensors.jl`
+`ITensors.jl` is not a big library.
 The dependencies of `ITensors.jl` are not big since most functionalities have been separated from `ITensors.jl`.
+I do not think there will be frequent future major changes.
+
+The library contains `TagSets` (tag sets), `ITensor` (general tensor type) and some other utilities such as `SmallStrings` (fixed length strings) for tags.
+`TagSets` and `SmallStrings` have been effectively separated from the main source code and are available [here](https://github.com/ITensor/ITensors.jl/tree/main/src/lib).
+We can copy them for our own library, or reimplement them if necessary.
+Alternatively, we can simply dependent on `ITensors.jl`.
+
 The dependence of `ITensors.jl` means that the user of our library needs to cite the ITensor paper as well.
-But, a citation is not a big problem.
+Fine, it is not a big problem. Get more citations in my community :)
+
+## Drawbacks of depending on a big external library
+From my experience with ALPS and TRIQS, the following are the drawbacks of depending on a big external library:
+
+- Sometimes, the external library is updated frequently, and our library needs to be updated frequently following their updates.
+- If we use C++, depending on the external library includes a huge number of dependencies, and it is not easy to manage/install them manually. Installing is combersome, and often requires a lot of trial and error. Even worse, we fail to build some of them :(
+- Some library is difficult to compile, e.g., because they require latest compilers.
+- Even if you do not like the behavior of an external library, you cannot change it (like default algorithms for contraction, etc.)
+
+How about `ITensors.jl`? 
+It has dependencies on a limited number of libraries, and we can automatically manage them by the package manager.
+I have never failed to install `ITensors.jl` with the package manager.
+We do not some of the default beavior of `ITensorMPS.jl`, but we do not depend on it.
 
 
 ## Considerations
@@ -57,15 +78,18 @@ But, a citation is not a big problem.
   - We are not sure that the hybrid indexing structure is better than the ITensor's indexing structure.
 
 ### My considerations
+Anyway, we need some default dynamic Tensor types for our T4A libraries.
+It is very combursome to use the current static TensorTrain types for our T4A libraries, especially in their interfaces.
 At this moment, I would prefer Option 1 or 2.
 If we become confident about the hybrid indexing structure, we can switch to Option 3.
 
-`ITensors.jl` is not a big library, and I do not think there will be frequent future major changes.
-The library contains `TagSets` (tag sets), `ITensor` (general tensor type) and some other utilities such as `SmallStrings` (fixed length strings) for tags.
-`TagSets` and `SmallStrings` have been effectively separated from the main source code and are available [here](https://github.com/ITensor/ITensors.jl/tree/main/src/lib).
-We can copy them for our own library, or reimplement them if necessary.
-Alternatively, we can simply dependent on `ITensors.jl`.
-
-I am quite satisfied with the current design of `ITensor`, which is very dynamic.
-A possible disadvantage is that the design is too dynamic, and may be difficult to integrate into C++ and Fortran codes.
+I am quite satisfied with the current design of `ITensor`.
+A possible disadvantage is that the design may be difficult to integrate into C++ and Fortran codes.
 At some point, we may replace the backend (i.e., contraction algorithms) by optimized implementations written in Rust.
+
+A reasonable option is start with Option 1, which requires a minimum maintenance effort.
+This means we make `ITensors.jl` a strong dependency for our libraries.
+
+Alternatively, we implement a minimum set of functionalities in `ITensors.jl` as Option 2.
+This requires some maintenance and coding effort, but we can avoid the dependency on `ITensors.jl`.
+Coding effort is not a big problem with the help of LLMs.

@@ -1,0 +1,63 @@
+[libraries]
+NDTensors   = { desc = "NDTensors.jl" }
+ITensorMPS   = { desc = "MPS/MPO" }
+ITensors    = { desc = "Indexed tensor and contraction" }
+TensorCrossInterpolation = { desc = "TCI for TT" }
+QuanticsGrids = { desc = "Quantics grids" }
+QuanticsTCI = { desc = "Sugar coating for TCI + QTT" }
+FastMPOContractions = { desc = "Additional MPO contractions algorithms" }
+Quantics = { desc = "Quantics-related utilities and misc" }
+ProjMPSs = { desc = "Adaptive patching + multiplication" }
+TCIAlgorithms = { desc = "Adaptive patching + TCI" }
+TCIItensorConversion = { desc = "Conversion between ITensor and TCI" }
+
+[library_dependencies.ITensors]
+strong_deps = ["NDTensors"]
+weak_deps   = []
+test_deps   = []
+
+[library_dependencies.ITensorMPS]
+strong_deps = ["ITensors"]
+weak_deps   = []
+test_deps   = []
+
+
+[library_dependencies.TensorCrossInterpolation]
+strong_deps = []
+weak_deps   = ["ITensors", "ITensorMPS"]
+test_deps   = []
+
+[library_dependencies.QuanticsGrids]
+strong_deps = []
+weak_deps   = []
+test_deps   = []
+
+[library_dependencies.QuanticsTCI]
+strong_deps   = ["TensorCrossInterpolation", "QuanticsGrids"]
+weak_deps   = []
+test_deps   = []
+
+[library_dependencies.FastMPOContractions]
+strong_deps   = ["ITensors", "ITensorMPS"]
+weak_deps   = []
+test_deps   = []
+
+[library_dependencies.Quantics]
+strong_deps   = ["ITensors", "FastMPOContractions", "ITensorMPS"]
+weak_deps   = []
+test_deps   = []
+
+[library_dependencies.ProjMPSs]
+strong_deps   = ["ITensors", "ITensorMPS"]
+weak_deps   = []
+test_deps   = []
+
+[library_dependencies.TCIAlgorithms]
+strong_deps   = ["ITensors", "ITensorMPS", "TensorCrossInterpolation", "TCIItensorConversion", "Quantics"]
+weak_deps   = []
+test_deps   = []
+
+[library_dependencies.TCIItensorConversion]
+strong_deps   = ["ITensors", "ITensorMPS", "TensorCrossInterpolation"]
+weak_deps   = []
+test_deps   = []

@@ -1,4 +1,34 @@
-# Design of Julia libraries
+# JuliaDesign
+
+This repository contains tools and documentation for designing Julia libraries and visualizing their dependencies.
+
+## Dependency Graph Generator
+
+A tool to generate visual dependency graphs from TOML configuration files.
+
+### Setup
+
+```bash
+# Activate project environment
+julia --project=@.
+
+# Install dependencies
+julia -e "using Pkg; Pkg.instantiate()"
+```
+
+### Usage
+
+```bash
+# Generate graph with default settings (libraries.toml -> libdeps.svg)
+julia generate_dependency_graph.jl
+
+# Show help message
+julia generate_dependency_graph.jl -h
+```
+
+---
+
+## Design of Julia libraries
 
 This document is a collection of thoughts on how to design Julia libraries.
 

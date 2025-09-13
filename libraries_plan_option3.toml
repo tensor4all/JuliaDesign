@@ -1,0 +1,74 @@
+[libraries]
+MPI = { desc = "MPI" }
+QuanticsTransforms   = { desc = "Quantics transforms" }
+TreeTensorNetworks   = { desc = "Tree Tensor Networks" }
+TTNContractions = { desc = "Contractions algorithms" }
+TCICore = { desc = "TCI core algorithms (LU decomposition, etc.)" }
+TreeTCI = { desc = "TCI for TT/TCI" }
+ParallelTCI = { desc = "Parallelized TCI" }
+ParallelMPOContractions = { desc = "Parallelized MPO contractions" }
+QuanticsGrids = { desc = "Quantics grids" }
+QuanticsTCI = { desc = "Sugar coating for TCI + QTT" }
+TTNOperations = { desc = "Quantics.jl - QuanticsTransofms.jl" }
+ProjMPSs = { desc = "Adaptive patching + multiplication" }
+PatchedTCI = { desc = "Adaptive patching + TCI" }
+
+[library_dependencies.TreeTensorNetworks]
+strong_deps = []
+weak_deps   = []
+test_deps   = []
+
+[library_dependencies.QuanticsTransforms]
+strong_deps = ["TreeTensorNetworks", "QuanticsGrids"]
+weak_deps   = []
+test_deps   = []
+
+[library_dependencies.TCICore]
+strong_deps = []
+weak_deps   = []
+test_deps   = []
+
+[library_dependencies.TreeTCI]
+strong_deps = ["TreeTensorNetworks", "TCICore"]
+weak_deps   = []
+test_deps   = []
+
+[library_dependencies.ParallelTCI]
+strong_deps = ["TCICore", "TreeTensorNetworks", "MPI"]
+weak_deps   = []
+test_deps   = []
+
+[library_dependencies.ParallelMPOContractions]
+strong_deps = ["MPI", "TreeTensorNetworks"]
+weak_deps   = []
+test_deps   = []
+
+[library_dependencies.QuanticsGrids]
+strong_deps = []
+weak_deps   = []
+test_deps   = []
+
+[library_dependencies.QuanticsTCI]
+strong_deps   = ["TreeTCI", "QuanticsGrids"]
+weak_deps   = []
+test_deps   = []
+
+[library_dependencies.TTNContractions]
+strong_deps   = ["TreeTensorNetworks"]
+weak_deps   = []
+test_deps   = []
+
+[library_dependencies.TTNOperations]
+strong_deps   = ["TTNContractions", "TreeTensorNetworks"]
+weak_deps   = []
+test_deps   = []
+
+[library_dependencies.ProjMPSs]
+strong_deps   = ["TreeTensorNetworks"]
+weak_deps   = []
+test_deps   = []
+
+[library_dependencies.PatchedTCI]
+strong_deps   = ["TreeTensorNetworks", "TreeTCI", "TTNOperations"]
+weak_deps   = []
+test_deps   = []

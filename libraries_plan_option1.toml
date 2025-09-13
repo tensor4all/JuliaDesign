@@ -2,7 +2,7 @@
 ITensors    = { desc = "Indexed tensor and contraction", external = true }
 MPI = { desc = "MPI" }
 QuanticsTransforms   = { desc = "Quantics transforms" }
-TensorNetworks   = { desc = "MPS/MPO" }
+TensorNetworks   = { desc = "ITensor-based tensor networks + simple tensor trains" }
 TensorNetworkContractions = { desc = "Contractions algorithms" }
 TCICore = { desc = "TCI core algorithms (LU decomposition, etc.)" }
 TensorCrossInterpolation = { desc = "TCI for TT" }

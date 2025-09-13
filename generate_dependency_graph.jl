@@ -1,5 +1,5 @@
 using TOML
-using Graphs: DiGraph, add_vertex!, add_edge!, rem_edge!, edges, src, dst, vertices, has_edge
+using Graphs: DiGraph, add_vertex!, add_edge!, rem_edge!, edges, src, dst, vertices, has_edge, is_cyclic
 using GraphViz
 using FileIO
 
@@ -72,6 +72,30 @@ function transitive_reduction_aggressive(g::DiGraph, lib_names::Vector{String}, 
     return edges_to_remove
 end
 
+# Helper function to check if a library has indirect external dependencies
+function has_indirect_external_dependency(lib_name::String, libs::Dict, deps::Dict)
+    # Check if this library itself is external
+    if haskey(libs, lib_name) && haskey(libs[lib_name], "external") && libs[lib_name]["external"] == true
+        return true
+    end
+    
+    # Check if this library has strong dependencies on external libraries
+    if haskey(deps, lib_name)
+        sub = deps[lib_name]
+        if haskey(sub, "strong_deps")
+            for dep in sub["strong_deps"]
+                # Recursive check
+                if has_indirect_external_dependency(dep, libs, deps)
+                    return true
+                end
+            end
+        end
+    end
+    
+    return false
+end
+
+
 """
 Generate dependency graph and save to files
 
@@ -84,7 +108,7 @@ Generate dependency graph and save to files
 # Returns
 - Tuple of generated file names (svg_file,)
 """
-function generate_dependency_graph(toml_path::String = "libraries.toml", prefix::String = "", width::Real = 6.0, height::Real = 6.0)
+function generate_dependency_graph(toml_path::String = "libraries.toml", prefix::String = "", width::Real = 8.0, height::Real = 8.0)
     @show width, height
     
     # Auto-generate prefix from TOML filename if not provided
@@ -104,6 +128,9 @@ function generate_dependency_graph(toml_path::String = "libraries.toml", prefix:
     # Create directed graph
     g = DiGraph()
     lib_names = collect(keys(libs))
+
+    # Check for cycles in dependencies before building graph
+    println("Checking for circular dependencies...")
 
     # Add each library as a node
     for ln in lib_names
@@ -138,6 +165,13 @@ function generate_dependency_graph(toml_path::String = "libraries.toml", prefix:
                 edge_attrs[(src_idx, dst_idx)] = "weak"
             end
         end
+    end
+
+    # Check for cycles using Graphs.jl standard function
+    if is_cyclic(g)
+        error("Circular dependency detected in the dependency graph!")
+    else
+        println("No circular dependencies found.")
     end
 
     # Apply transitive reduction to simplify the graph
@@ -175,11 +209,58 @@ function generate_dependency_graph(toml_path::String = "libraries.toml", prefix:
     ]
 
     # Define nodes (using library names as identifiers)
+    external_libs = String[]
+    internal_libs = String[]
+    
     for ln in lib_names
         desc = libs[ln]["desc"]
         # Use HTML-like labels to control font sizes
         label = "<<b>$ln</b><br/><font point-size=\"10\">$desc</font>>"
-        push!(dot_lines, "  \"$ln\" [label=$label];")
+        
+        # Check if this library is external or depends on external libraries
+        is_external = haskey(libs[ln], "external") && libs[ln]["external"] == true
+        has_external_dep = false
+        
+        # Check if this library has direct or indirect strong dependencies on external libraries
+        if haskey(deps, ln)
+            sub = deps[ln]
+            if haskey(sub, "strong_deps")
+                for dep in sub["strong_deps"]
+                    # Check direct dependency
+                    if haskey(libs, dep) && haskey(libs[dep], "external") && libs[dep]["external"] == true
+                        has_external_dep = true
+                        break
+                    end
+                    # Check indirect dependency through strong dependencies
+                    if has_indirect_external_dependency(dep, libs, deps)
+                        has_external_dep = true
+                        break
+                    end
+                end
+            end
+        end
+        
+        # Set node color based on external status and collect for ranking
+        if is_external || has_external_dep
+            push!(dot_lines, "  \"$ln\" [label=$label, color=red, penwidth=3];")
+            push!(external_libs, ln)
+        else
+            push!(dot_lines, "  \"$ln\" [label=$label];")
+            push!(internal_libs, ln)
+        end
+    end
+    
+    # Add rank constraints to place external libraries at the top
+    if !isempty(external_libs)
+        # Place external libraries in rank 0 (top)
+        rank_line = "  { rank=0; " * join(["\"$lib\"" for lib in external_libs], "; ") * " }"
+        push!(dot_lines, rank_line)
+    end
+    
+    if !isempty(internal_libs)
+        # Place internal libraries in rank 10 (bottom)
+        rank_line = "  { rank=10; " * join(["\"$lib\"" for lib in internal_libs], "; ") * " }"
+        push!(dot_lines, rank_line)
     end
 
 

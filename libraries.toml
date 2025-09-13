@@ -1,7 +1,7 @@
 [libraries]
-NDTensors   = { desc = "NDTensors.jl" }
-ITensorMPS   = { desc = "MPS/MPO" }
-ITensors    = { desc = "Indexed tensor and contraction" }
+NDTensors   = { desc = "NDTensors.jl", external = true }
+ITensorMPS   = { desc = "MPS/MPO", external = true }
+ITensors    = { desc = "Indexed tensor and contraction", external = true }
 TensorCrossInterpolation = { desc = "TCI for TT" }
 QuanticsGrids = { desc = "Quantics grids" }
 QuanticsTCI = { desc = "Sugar coating for TCI + QTT" }

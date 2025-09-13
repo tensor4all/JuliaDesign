@@ -1,6 +1,5 @@
 [libraries]
 ITensors    = { desc = "Indexed tensor and contraction", external = true }
-SimpleTensorNetworks   = { desc = "Simple tensor trains/tree tensor networks" }
 MPI = { desc = "MPI" }
 QuanticsTransforms   = { desc = "Quantics transforms" }
 TensorNetworks   = { desc = "MPS/MPO" }
@@ -26,14 +25,9 @@ strong_deps = ["ITensors"]
 weak_deps   = []
 test_deps   = []
 
-[library_dependencies.SimpleTensorNetworks]
-strong_deps = []
-weak_deps   = []
-test_deps   = []
-
 [library_dependencies.QuanticsTransforms]
-strong_deps = ["SimpleTensorNetworks", "QuanticsGrids"]
-weak_deps   = ["TensorNetworks"]
+strong_deps = ["TensorNetworks", "QuanticsGrids"]
+weak_deps   = []
 test_deps   = []
 
 [library_dependencies.TCICore]
@@ -42,22 +36,22 @@ weak_deps   = []
 test_deps   = []
 
 [library_dependencies.TensorCrossInterpolation]
-strong_deps = ["SimpleTensorNetworks", "TCICore"]
-weak_deps   = ["ITensors", "TensorNetworks"]
+strong_deps = ["TensorNetworks", "TCICore"]
+weak_deps   = []
 test_deps   = []
 
 [library_dependencies.ParallelTCI]
-strong_deps = ["TCICore", "SimpleTensorNetworks", "MPI"]
+strong_deps = ["TCICore", "TensorNetworks", "MPI"]
 weak_deps   = []
 test_deps   = []
 
 [library_dependencies.ParallelMPOContractions]
-strong_deps = ["MPI"]
-weak_deps   = ["TensorNetworks"]
+strong_deps = ["MPI","TensorNetworks"]
+weak_deps   = []
 test_deps   = []
 
 [library_dependencies.TreeTCI]
-strong_deps = ["TCICore", "SimpleTensorNetworks"]
+strong_deps = ["TCICore", "TensorNetworks"]
 weak_deps   = []
 test_deps   = []
 

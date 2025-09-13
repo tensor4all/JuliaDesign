@@ -6,7 +6,6 @@ TensorNetworkContractions = { desc = "Contractions algorithms" }
 TensorCrossInterpolation = { desc = "TCI for TT" }
 QuanticsGrids = { desc = "Quantics grids" }
 QuanticsTCI = { desc = "Sugar coating for TCI + QTT" }
-FastMPOContractions = { desc = "Additional MPO contractions algorithms" }
 Quantics = { desc = "Quantics-related utilities and misc" }
 ProjMPSs = { desc = "Adaptive patching + multiplication" }
 PatchedTCI = { desc = "Adaptive patching + TCI" }

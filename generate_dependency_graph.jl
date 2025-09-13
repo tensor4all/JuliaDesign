@@ -1,7 +1,76 @@
 using TOML
-using Graphs: DiGraph, add_vertex!, add_edge!, edges, src, dst
+using Graphs: DiGraph, add_vertex!, add_edge!, rem_edge!, edges, src, dst, vertices, has_edge
 using GraphViz
 using FileIO
+
+# Helper function to check if there's an indirect path between two nodes
+function has_indirect_path(g::DiGraph, src::Int, dst::Int, edge_attrs::Dict{Tuple{Int,Int}, String})
+    # Create a copy of the graph for testing
+    g_copy = copy(g)
+    
+    # Remove the direct edge from the copy
+    if has_edge(g_copy, src, dst)
+        rem_edge!(g_copy, src, dst)
+    end
+    
+    # Check if there's still a path (indirect path)
+    has_path = false
+    try
+        # Use DFS to find path
+        has_path = Graphs.has_path(g_copy, src, dst)
+    catch e
+        println("Error in has_path: $e")
+        has_path = false
+    end
+    
+    return has_path
+end
+
+# Alternative: More aggressive transitive reduction (strong dependencies only)
+function transitive_reduction_aggressive(g::DiGraph, lib_names::Vector{String}, edge_attrs::Dict{Tuple{Int,Int}, String})
+    # Create adjacency matrix for strong dependencies only
+    n = length(lib_names)
+    adj = zeros(Bool, n, n)
+    
+    # Fill adjacency matrix with strong dependencies only
+    for e in edges(g)
+        src_idx, dst_idx = src(e), dst(e)
+        edge_key = (src_idx, dst_idx)
+        if haskey(edge_attrs, edge_key) && edge_attrs[edge_key] == "strong"
+            adj[src_idx, dst_idx] = true
+        end
+    end
+    
+    # Compute transitive closure for strong dependencies
+    closure = copy(adj)
+    for k in 1:n
+        for i in 1:n
+            for j in 1:n
+                if closure[i, k] && closure[k, j]
+                    closure[i, j] = true
+                end
+            end
+        end
+    end
+    
+    # Remove edges that are strong dependencies and have indirect strong paths
+    edges_to_remove = Set{Tuple{Int,Int}}()
+    for i in 1:n
+        for j in 1:n
+            if adj[i, j] && closure[i, j]
+                # Check if there's a strong path through another node
+                for k in 1:n
+                    if k != i && k != j && adj[i, k] && closure[k, j]
+                        push!(edges_to_remove, (i, j))
+                        break
+                    end
+                end
+            end
+        end
+    end
+    
+    return edges_to_remove
+end
 
 """
 Generate dependency graph and save to files
@@ -70,6 +139,26 @@ function generate_dependency_graph(toml_path::String = "libraries.toml", prefix:
             end
         end
     end
+
+    # Apply transitive reduction to simplify the graph
+    println("Applying transitive reduction...")
+    
+    # Use the more aggressive algorithm (strong dependencies only)
+    edges_to_remove = transitive_reduction_aggressive(g, lib_names, edge_attrs)
+    
+    # Remove redundant edges (strong dependencies only)
+    for (src, dst) in edges_to_remove
+        src_name = lib_names[src]
+        dst_name = lib_names[dst]
+        edge_key = (src, dst)
+        if haskey(edge_attrs, edge_key) && edge_attrs[edge_key] == "strong"
+            println("Removing redundant strong edge: $src_name -> $dst_name")
+            rem_edge!(g, src, dst)
+            delete!(edge_attrs, (src, dst))
+        end
+    end
+    
+    println("Transitive reduction complete: removed $(length(edges_to_remove)) redundant edges")
 
     # Build DOT format string
     dot_lines = [

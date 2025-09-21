@@ -1,0 +1,74 @@
+[libraries]
+MPI = { desc = "MPI" }
+ITensors = { desc = "Indexing and contraction library", external = true }
+SimpleTensorNetworks = { desc = "ITensor-like tensor train and tensor network"}
+QuanticsTransform   = { desc = "Quantics transforms" }
+TensorTrain = { desc = "Tensor train and contractions"}
+ParallelTensorTrain = { desc = "Parallel TCI and parallel MPO contractions"}
+TensorCrossInterpolation = { desc = "TCI for TT"}
+QuanticsGrids = { desc = "Quantics grids" }
+QuanticsTCI = { desc = "Sugar coating for TCI + QTT" }
+ProjMPSs = { desc = "Adaptive patching + multiplication" }
+PatchedTCI = { desc = "Adaptive patching + TCI" }
+ApplicationCode = { desc = "Application code" }
+
+[library_dependencies.MPI]
+strong_deps = []
+weak_deps   = []
+test_deps   = []
+
+[library_dependencies.ITensors]
+strong_deps = []
+weak_deps   = []
+test_deps   = []
+
+[library_dependencies.TensorTrain]
+strong_deps = []
+weak_deps   = []
+test_deps   = []
+
+[library_dependencies.ParallelTensorTrain]
+strong_deps = ["TensorTrain", "MPI"]
+weak_deps   = []
+test_deps   = []
+
+[library_dependencies.TensorCrossInterpolation]
+strong_deps = ["TensorTrain"]
+weak_deps   = []
+test_deps   = []
+
+[library_dependencies.QuanticsTransform]
+strong_deps = ["TensorTrain", "QuanticsGrids"]
+weak_deps   = ["SimpleTensorNetworks"]
+test_deps   = []
+
+[library_dependencies.SimpleTensorNetworks]
+strong_deps = ["ITensors"]
+weak_deps   = []
+test_deps   = []
+
+[library_dependencies.QuanticsGrids]
+strong_deps = []
+weak_deps   = []
+test_deps   = []
+
+[library_dependencies.QuanticsTCI]
+strong_deps   = ["TensorCrossInterpolation", "QuanticsGrids"]
+weak_deps   = []
+test_deps   = []
+
+
+[library_dependencies.ProjMPSs]
+strong_deps   = ["TensorTrain", "SimpleTensorNetworks"]
+weak_deps   = []
+test_deps   = []
+
+[library_dependencies.PatchedTCI]
+strong_deps   = ["TensorTrain", "TensorCrossInterpolation"]
+weak_deps   = ["SimpleTensorNetworks"]
+test_deps   = []
+
+[library_dependencies.ApplicationCode]
+strong_deps   = ["QuanticsTCI", "ProjMPSs", "SimpleTensorNetworks", "QuanticsTransform"]
+weak_deps   = []
+test_deps   = []

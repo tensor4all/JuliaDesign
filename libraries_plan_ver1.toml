@@ -4,13 +4,13 @@ ITensors = { desc = "Indexing and contraction library", external = true }
 SimpleTensorNetworks = { desc = "ITensor-like tensor train and tensor network"}
 QuanticsTransform   = { desc = "Quantics transforms" }
 TensorTrain = { desc = "Tensor train and contractions"}
-ParallelTensorTrain = { desc = "Parallel TCI and parallel MPO contractions"}
+ParallelTensorTrain = { desc = "Parallel MPO contractions"}
+ParallelTCI = { desc = "Parallel TCI"}
 TensorCrossInterpolation = { desc = "TCI for TT"}
 QuanticsGrids = { desc = "Quantics grids" }
 QuanticsTCI = { desc = "Sugar coating for TCI + QTT" }
-ProjMPSs = { desc = "Adaptive patching + multiplication" }
-PatchedTCI = { desc = "Adaptive patching + TCI" }
-ApplicationCode = { desc = "Application code" }
+AdaptivePatching = { desc = "Adaptive patching + multiplication + TCI" }
+#ApplicationCode = { desc = "Application code" }
 
 [library_dependencies.MPI]
 strong_deps = []
@@ -29,6 +29,11 @@ test_deps   = []
 
 [library_dependencies.ParallelTensorTrain]
 strong_deps = ["TensorTrain", "MPI"]
+weak_deps   = []
+test_deps   = []
+
+[library_dependencies.ParallelTCI]
+strong_deps = ["TensorCrossInterpolation", "MPI"]
 weak_deps   = []
 test_deps   = []
 
@@ -58,17 +63,12 @@ weak_deps   = []
 test_deps   = []
 
 
-[library_dependencies.ProjMPSs]
-strong_deps   = ["TensorTrain", "SimpleTensorNetworks"]
+[library_dependencies.AdaptivePatching]
+strong_deps   = ["TensorTrain", "SimpleTensorNetworks", "TensorCrossInterpolation"]
 weak_deps   = []
 test_deps   = []
 
-[library_dependencies.PatchedTCI]
-strong_deps   = ["TensorTrain", "TensorCrossInterpolation"]
-weak_deps   = ["SimpleTensorNetworks"]
-test_deps   = []
-
-[library_dependencies.ApplicationCode]
-strong_deps   = ["QuanticsTCI", "ProjMPSs", "SimpleTensorNetworks", "QuanticsTransform"]
-weak_deps   = []
-test_deps   = []
+#[library_dependencies.ApplicationCode]
+#strong_deps   = ["QuanticsTCI", "AdaptivePatching", "SimpleTensorNetworks", "QuanticsTransform"]
+#weak_deps   = []
+#test_deps   = []

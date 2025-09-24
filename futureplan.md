@@ -22,7 +22,8 @@ From top to bottom, the options are less ITensor-dependent.
 ## On `ITensors.jl`
 `ITensors.jl` is not a big library.
 The dependencies of `ITensors.jl` are not big since most functionalities have been separated from `ITensors.jl`.
-If we have a strong dependency on `ITensors.jl`, we can encourage the user to cite the ITensor paper.
+If we have a strong dependency on `ITensors.jl` or `NDTensors.jl`, we can encourage the user to cite the ITensor paper.
+This is because `NDTensors.jl` has been developed by the same team in close connection with `ITensors.jl`.
 
 ## General drawbacks of depending on a big external library
 From my experience with ALPS and TRIQS, the following are the drawbacks of depending on a big external library:

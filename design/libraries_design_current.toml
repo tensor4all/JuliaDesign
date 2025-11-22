@@ -1,17 +1,12 @@
 [libraries]
 ITensors = { desc = "Indexing and contraction library", external = true }
 T4AITensorCompat = { desc = "ITensor-like tensor train"}
-T4AQuantics   = { desc = "Useful experimental code for quantics tensor networks" }
+T4AQuantics   = { desc = "Useful experimental code\\n for quantics tensor networks + Quantics transforms" }
 T4APartitionedTT = { desc = "Partitioned tensor trains" }
 T4AAdaptivePatchedTCI = { desc = "Adaptive patching + TCI"}
 T4ATensorCI = { desc = "TCI for TT"}
 QuanticsGrids = { desc = "Quantics grids" }
-T4AQuanticsTCI = { desc = "Quanticscrossinterpolate, Quantics Fourier Transform, Quantics affine transform MPOs" }
-
-[library_dependencies.MPI]
-strong_deps = []
-weak_deps   = []
-test_deps   = []
+T4AQuanticsTCI = { desc = "Quanticscrossinterpolate, Quantics Fourier Transform \\n(to be implemented: quantics transform MPOs)" }
 
 [library_dependencies.ITensors]
 strong_deps = []
@@ -24,13 +19,13 @@ weak_deps   = []
 test_deps   = []
 
 [library_dependencies.T4AAdaptivePatchedTCI]
-strong_deps = ["T4APartitionedTT", "T4AQuantics", "T4ATensorCI", "QuanticsGrids"]
-weak_deps   = ["ITensors", "T4AITensorCompat"]
+strong_deps = ["T4ATensorCI", "QuanticsGrids"]
+weak_deps   = ["T4AITensorCompat", "T4APartitionedTT"]
 test_deps   = []
 
 [library_dependencies.T4ATensorCI]
 strong_deps = []
-weak_deps   = []
+weak_deps   = ["T4AITensorCompat"]
 test_deps   = []
 
 [library_dependencies.T4AQuantics]
@@ -52,9 +47,3 @@ test_deps   = []
 strong_deps   = ["T4ATensorCI", "QuanticsGrids"]
 weak_deps   = []
 test_deps   = []
-
-
-#[library_dependencies.ApplicationCode]
-#strong_deps   = ["T4AQuanticsTCI", "T4AITensorCompat", "T4AQuantics"]
-#weak_deps   = []
-#test_deps   = []

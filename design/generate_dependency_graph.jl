@@ -214,8 +214,10 @@ function generate_dependency_graph(toml_path::String = "libraries.toml", prefix:
     
     for ln in lib_names
         desc = libs[ln]["desc"]
+        # Convert \n to <br/> for HTML labels in GraphViz
+        desc_html = replace(desc, "\\n" => "<br/>")
         # Use HTML-like labels to control font sizes
-        label = "<<b>$ln</b><br/><font point-size=\"10\">$desc</font>>"
+        label = "<<b>$ln</b><br/><font point-size=\"10\">$desc_html</font>>"
         
         # Check if this library is external or depends on external libraries
         is_external = haskey(libs[ln], "external") && libs[ln]["external"] == true

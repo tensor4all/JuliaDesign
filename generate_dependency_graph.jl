@@ -202,9 +202,10 @@ function generate_dependency_graph(toml_path::String = "libraries.toml", prefix:
         "  ratio=compress;",
         "  overlap=false;",
         "  splines=true;",
-        "  nodesep=2.0;",
-        "  ranksep=3.0;",
-        "  node [shape=box, style=rounded, fontname=\"Arial\", fontsize=12, margin=\"0.2,0.2\"];",
+        "  graph [pad=\"0.5\", margin=\"0.2\"];",
+        "  nodesep=0.5;",
+        "  ranksep=0.8;",
+        "  node [shape=box, style=rounded, fontname=\"Arial\", fontsize=12, margin=\"0.05,0.05\"];",
         "  edge [fontname=\"Arial\", fontsize=10];"
     ]
 
